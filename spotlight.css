@@ -1,0 +1,73 @@
+#spotlight{
+	position: absolute;
+	top: 0px;
+	left: 0px;	
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+	}
+
+.container{
+	position: relative;
+	margin: auto;
+	width: 60%;
+	}
+
+#show{
+	display: block;
+	margin: auto;
+	height: 80%;
+	width: 60%;
+	padding: 10px;
+	background-color: rgb(255, 255, 255);
+	border-radius: 5px;
+	}
+
+#rightButton{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	z-index: 10000;
+	width: 60%;
+	height: 100%;
+	}
+
+#leftButton{
+	position: absolute;
+	top:0px;
+	left: 0px;
+	z-index: 10000;
+	width: 40%;
+	height: 100%;
+	}
+
+#closeButton{
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	z-index: 10000;
+	width: 100%;
+	}
+
+#rightIcon{
+	position: absolute;
+	width: 50px;
+	height: 45px;
+	top: 50%;
+	right: 0px;
+	}
+
+#leftIcon{
+	position: absolute;
+	width: 50px;
+	height: 45px;
+	top: 50%;
+	left: 0px;
+
+	}
+
+#closeIcon{
+	width: 27px;
+	height: 27px;
+	float: right;
+	}
