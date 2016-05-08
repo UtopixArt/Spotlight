@@ -69,9 +69,9 @@ Spotlight.prototype.buildAlbum = function($link){
 
 Spotlight.prototype.cacheDiv = function(){
 	
-	this.next = '<img id = "rightIcon" src="/spotlight/icons/next.png">'
-	this.prev = '<img id = "leftIcon" src="/spotlight/icons/prev.png">'
-	this.close = '<img id = "closeIcon" src="/spotlight/icons/close.png">'
+	this.next = '<img id = "rightIcon" src="Spotlight/icons/next.png">'
+	this.prev = '<img id = "leftIcon" src="Spotlight/icons/prev.png">'
+	this.close = '<img id = "closeIcon" src="Spotlight/icons/close.png">'
 
 	this.rightButton = '<div id = "rightButton">'+this.next+' </div>'
 	this.leftButton = '<div id = "leftButton">'+this.prev+'</div>'
