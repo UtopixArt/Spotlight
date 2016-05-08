@@ -144,9 +144,20 @@ Spotlight.prototype.sizeContainer = function() {// a  finir
 	
 };
 
+Spotlight.prototype.fitContant = function() {
+    var $show = $('#show');
+    
+    console.log($(document).width())
+    console.log($(document).height())
+    
+    $show.width($(document).width());
+    $show.height($(document).height());	
+};
+
 Spotlight.prototype.showImage = function(){
 
 	$('#show').attr('src',this.album.linksList[this.album.numberImage].link);
+	this.fitContant();
 }
 
 Spotlight.prototype.end = function(){
