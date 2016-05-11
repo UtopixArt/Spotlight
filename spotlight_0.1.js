@@ -32,6 +32,7 @@ Spotlight.prototype.run = function() {
 			}
 			
 			$('#spotlight').fadeIn('slow');
+			self.showImage(self.album.numberImage);
 			self.sizeContainer();
     	}
     	return false;
