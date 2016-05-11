@@ -27,12 +27,12 @@ Spotlight.prototype.run = function() {
    				//console.log("linkList : "+self.album.linksList[i].link);
     			if (self.album.linksList[i].link === $(event.currentTarget).attr('href')){
     				self.album.numberImage = i
-    				console.log(self.album.numberImage);
+    				console.log("first : "+self.album.numberImage);
     			}
 			}
 			
 			$('#spotlight').fadeIn('slow');
-			self.showImage();		
+			self.sizeContainer();
     	}
     	return false;
     });	
@@ -40,10 +40,11 @@ Spotlight.prototype.run = function() {
 
 Spotlight.prototype.buildAlbum = function($link){
 	var self = this
+	
 	// method push album in the array with object data	
 	function addToAlbum($link){
 		self.album.linksList.push({ // push in the ablum.linksList array
-        link : $link.attr('href') 
+        link : $link.attr('href'),
     	});
 	};	
 	
@@ -57,6 +58,7 @@ Spotlight.prototype.buildAlbum = function($link){
 		//loop for storing data on linksList
 		for (var i = 0; i < $links.length; i++) {
         	addToAlbum($($links[i]));
+
 	    	if ($links[i] === $link[0]) {
 	        	this.album.numberImage = i;
 	      	}
@@ -85,20 +87,16 @@ Spotlight.prototype.cacheDiv = function(){
 
 Spotlight.prototype.update = function(){
 	
-	$(this.spotlight).appendTo($('body'));
-	this.sizeContainer();
-	//$('#spotlight').css('height',parseInt($('body').attr('height'))); // fix full screen 	
-	
+	$(this.spotlight).appendTo($('body'));		
 	this.nav();
-	this.end();
-	//close button method "jquery"
+	this.end(); //close button method "jquery"
 	
 };
 
 Spotlight.prototype.nav = function(){
 	var	self = this;
 	
-	this.showImage();
+	this.showImage(this.album.numberImage);
 
 	$('body').on('click', 'div[id = rightButton],div[id = leftButton]', function(event){		
 		var id = ($(event.currentTarget)).attr('id')
@@ -126,46 +124,44 @@ Spotlight.prototype.nav = function(){
 				console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 			}	
 		}
-		return self.showImage();
+		return self.showImage(self.album.numberImage);
 	};	
 };
 
-Spotlight.prototype.sizeContainer = function() {// a  finir
+Spotlight.prototype.sizeContainer = function() {
     var $spotlight = $('#spotlight');
     $spotlight.width($(document).width());
-    $spotlight.height($(document).height());
-    
-    //$spotlight.hide();
-		     
-			  
-  	//if($spotlight.is(":hidden")) {
-	//	$spotlight.slideDown("fast");
-	//}
-	
+    $spotlight.height($(document).height());    
 };
 
-Spotlight.prototype.fitContant = function() {
-    var $show = $('#show');
+Spotlight.prototype.showImage = function(numberImage) {
+    var $image = $('#show');
+    var preloader = new Image();
+   	var self = this;
     
-    console.log($(document).width())
-    console.log($(document).height())
-    
-    $show.width($(document).width());
-    $show.height($(document).height());	
+   	var windowWidth = $(window).width(),
+   		windowHeight  = $(window).height();
+
+    preloader.onload = function(){
+    	var $preloader;
+		$('#show').attr('src',self.album.linksList[numberImage].link);
+		$preloader = $(preloader)
+	 	$image.width(preloader.width * 0.7);
+     	$image.height(preloader.height * 0.7);
+     	
+	}
+
+ 	preloader.src = this.album.linksList[numberImage].link;
+ 	console.log("second : "+numberImage)
+ 	this.sizeContainer();
 };
 
-Spotlight.prototype.showImage = function(){
 
-	$('#show').attr('src',this.album.linksList[this.album.numberImage].link);
-	this.fitContant();
-}
 
 Spotlight.prototype.end = function(){
 	var $spotlight = $('#spotlight')
 	
 	$('#closeButton').click(function(){	
-		// $('#spotlight').remove();		
-		//window).off('resize', this.sizeContainer);
     	$spotlight.fadeOut('slow');	
 	});
 };
