@@ -14,7 +14,7 @@ Spotlight.prototype.init = function() {
 };
 
 Spotlight.prototype.run = function() {
-	var self = this
+	var self = this // pass through closure
 	
 	$('body').on('click', 'a[data-spotLight]', function(event) { //event click on data-spotLight value
     	
@@ -40,7 +40,7 @@ Spotlight.prototype.run = function() {
 };
 
 Spotlight.prototype.buildAlbum = function($link){
-	var self = this
+	var self = this // pass through closure
 	
 	// method push album in the array with object data	
 	function addToAlbum($link){
@@ -65,9 +65,9 @@ Spotlight.prototype.buildAlbum = function($link){
 	      	}
 	    }
 	}
-	this.cacheDiv();
+	this.cacheDiv(); //call cacheDiv for build spotlight balise
 	this.update();
-	this.init = true;
+	return this.init = true; // return init true
 };
 
 Spotlight.prototype.cacheDiv = function(){
@@ -89,13 +89,13 @@ Spotlight.prototype.cacheDiv = function(){
 Spotlight.prototype.update = function(){
 	
 	$(this.spotlight).appendTo($('body'));		
-	this.nav();
+	this.nav(); //call nav logic
 	this.end(); //close button method "jquery"
 	
 };
 
 Spotlight.prototype.nav = function(){
-	var	self = this;
+	var	self = this; // pass through closure
 	
 	this.showImage(this.album.numberImage);
 
@@ -136,28 +136,23 @@ Spotlight.prototype.sizeContainer = function() {
 };
 
 Spotlight.prototype.showImage = function(numberImage) {
-    var $image = $('#show');
-    var preloader = new Image();
-   	var self = this;
+    var $image = $('#show'); //stock l'id $('#Show')
+    var preloader = new Image();// use object image for grab image size
+   	var self = this;// pass through closure
     
-   	var windowWidth = $(window).width(),
+   	var windowWidth = $(window).width(), //stock window dimention
    		windowHeight  = $(window).height();
 
-    preloader.onload = function(){
-    	var $preloader;
-		$('#show').attr('src',self.album.linksList[numberImage].link);
-		$preloader = $(preloader)
-	 	$image.width(preloader.width * 0.7);
-     	$image.height(preloader.height * 0.7);
-     	
+    preloader.onload = function(){ //onload function
+    	$('#show').attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
+		//fit image on screen method
+	 	$image.width(preloader.width * 0.7); 
+     	$image.height(preloader.height * 0.7); 	
 	}
-
- 	preloader.src = this.album.linksList[numberImage].link;
- 	console.log("second : "+numberImage)
- 	this.sizeContainer();
+	
+	preloader.src = this.album.linksList[numberImage].link; // 	
+	this.sizeContainer(); // call method sizeContainer for fill container on screen
 };
-
-
 
 Spotlight.prototype.end = function(){
 	var $spotlight = $('#spotlight')
@@ -168,8 +163,6 @@ Spotlight.prototype.end = function(){
 	});
 };
 
-$('body').on('click', 'a[data-spotLight]', function(event) { // change call method
-new Spotlight();
-
-return false;
+$(document).ready(function(){
+ 	new Spotlight();
 });
