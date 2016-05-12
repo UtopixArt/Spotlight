@@ -164,10 +164,12 @@ Spotlight.prototype.end = function(){
 	
 	$('#closeButton').click(function(){	
     	$spotlight.fadeOut('slow');	
+    	//$('#spotlight').remove();
 	});
 };
 
-$(document).ready(function(){
+$('body').on('click', 'a[data-spotLight]', function(event) { // change call method
 new Spotlight();
 
+return false;
 });
