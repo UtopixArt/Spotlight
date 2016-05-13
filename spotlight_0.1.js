@@ -145,7 +145,7 @@ Spotlight.prototype.showImage = function(numberImage) {
    		imageWidth,
    		imageHeignt,
    		ratio,
-   		padding;
+   		padding = 100;
 
     preloader.onload = function(){ //onload function
     	$('#show').attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
@@ -158,22 +158,10 @@ Spotlight.prototype.showImage = function(numberImage) {
 		imageHeignt = preloader.height
 	 	
 	 	if(imageWidth > windowWidth || imageHeignt > windowHeight){
-	 		padding = 100;
 	 		ratio = (windowHeight - padding) / imageHeignt; 
-	 		console.log(ratio);
 	 		$image.width(imageWidth*ratio);	
 	 		$image.height(imageHeignt*ratio);
-	 	}
-		
-	 	// if(imageHeignt > windowHeight){
-	 		
-	 	// 	maxImageHeignt = imageHeignt + (windowHeight - imageHeignt - 60)
-	 	// 	$image.height(maxImageHeignt);	
-	 	// }
-
-	 	
-
-     	
+	 	}     	
 	}
 	
 	preloader.src = this.album.linksList[numberImage].link; // 	
