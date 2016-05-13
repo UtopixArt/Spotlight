@@ -136,18 +136,44 @@ Spotlight.prototype.sizeContainer = function() {
 };
 
 Spotlight.prototype.showImage = function(numberImage) {
+    var self = this;// pass through closure
     var $image = $('#show'); //stock l'id $('#Show')
     var preloader = new Image();// use object image for grab image size
-   	var self = this;// pass through closure
-    
+   	  
    	var windowWidth = $(window).width(), //stock window dimention
-   		windowHeight  = $(window).height();
+   		windowHeight  = $(window).height(),
+   		imageWidth,
+   		imageHeignt,
+   		ratio,
+   		padding;
 
     preloader.onload = function(){ //onload function
     	$('#show').attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
+		
 		//fit image on screen method
-	 	$image.width(preloader.width * 0.7); 
-     	$image.height(preloader.height * 0.7); 	
+		$image.width(preloader.width)
+		$image.height(preloader.height)
+
+		imageWidth = preloader.width
+		imageHeignt = preloader.height
+	 	
+	 	if(imageWidth > windowWidth || imageHeignt > windowHeight){
+	 		padding = 100;
+	 		ratio = (windowHeight - padding) / imageHeignt; 
+	 		console.log(ratio);
+	 		$image.width(imageWidth*ratio);	
+	 		$image.height(imageHeignt*ratio);
+	 	}
+		
+	 	// if(imageHeignt > windowHeight){
+	 		
+	 	// 	maxImageHeignt = imageHeignt + (windowHeight - imageHeignt - 60)
+	 	// 	$image.height(maxImageHeignt);	
+	 	// }
+
+	 	
+
+     	
 	}
 	
 	preloader.src = this.album.linksList[numberImage].link; // 	
