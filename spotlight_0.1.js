@@ -81,16 +81,23 @@ Spotlight.prototype.cacheDiv = function(){
 	this.closeButton = '<div id = "closeButton">'+this.close+'</div>'
 	this.image = '<img id ="show">'
 
-	this.container = '<div class = "container">'+this.rightButton+this.image+this.leftButton+this.closeButton+'</div>';
-	this.spotlight = '<div id = "spotlight">'+this.container+'</div>';
+	this.container = '<div class = "container">'+this.rightButton+this.image+this.leftButton+'</div>';
+	this.spotlight = '<div id = "spotlight">'+this.container+this.closeButton+'</div>';
 
 };
 
 Spotlight.prototype.update = function(){
 	
-	$(this.spotlight).appendTo($('body'));		
+	$(this.spotlight).appendTo($('body'));
+	$('#rightIcon').hide();
+	$('#rightButton').mouseover(function(){$('#rightIcon').fadeIn('fast')});
+	$('#rightButton').mouseout(function(){$('#rightIcon').fadeOut('fast')});
+	$('#leftIcon').hide();
+	$('#leftButton').mouseover(function(){$('#leftIcon').fadeIn('fast')});
+	$('#leftButton').mouseout(function(){$('#leftIcon').fadeOut('fast')});			
 	this.nav(); //call nav logic
 	this.end(); //close button method "jquery"
+
 	
 };
 
@@ -106,7 +113,7 @@ Spotlight.prototype.nav = function(){
 	
 	function navlogic(id){			
 		
-		if (id == 'rightButton'){
+		if (id == 'rightButton'){			
 			if(self.album.numberImage >= self.album.linksList.length -1){
 				self.album.numberImage = 0;
 				console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
@@ -116,7 +123,7 @@ Spotlight.prototype.nav = function(){
 			}		
 		}
 		
-		else if (id == 'leftButton'){				
+		else if (id == 'leftButton'){							
 			if(self.album.numberImage -1 < 0){
 				self.album.numberImage = self.album.linksList.length -1;
 				console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
@@ -125,13 +132,14 @@ Spotlight.prototype.nav = function(){
 				console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 			}	
 		}
+		$('#show').hide();
 		return self.showImage(self.album.numberImage);
 	};	
 };
 
-Spotlight.prototype.sizeContainer = function() {
+Spotlight.prototype.sizeContainer = function(windowWidth) {
     var $spotlight = $('#spotlight');
-    $spotlight.width($(document).width());
+    $spotlight.width($(document).width(windowWidth));
     $spotlight.height($(document).height());    
 };
 
@@ -140,32 +148,41 @@ Spotlight.prototype.showImage = function(numberImage) {
     var $image = $('#show'); //stock l'id $('#Show')
     var preloader = new Image();// use object image for grab image size
    	  
-   	var windowWidth = $(window).width(), //stock window dimention
+   	var windowWidth = $(window).width() , //stock window dimention
    		windowHeight  = $(window).height(),
    		imageWidth,
-   		imageHeignt,
+   		imageHeight,
    		ratio,
-   		padding = 100;
-
+   		wRatio,
+   		hRatio,
+   		size = 0.85;    
     preloader.onload = function(){ //onload function
-    	$('#show').attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
-		
+    	$image.attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
+	
 		//fit image on screen method
-		$image.width(preloader.width)
-		$image.height(preloader.height)
+		$image.width(preloader.width * size)
+		$image.height(preloader.height * size)
 
 		imageWidth = preloader.width
-		imageHeignt = preloader.height
+		imageHeight = preloader.height
 	 	
-	 	if(imageWidth > windowWidth || imageHeignt > windowHeight){
-	 		ratio = (windowHeight - padding) / imageHeignt; 
-	 		$image.width(imageWidth*ratio);	
-	 		$image.height(imageHeignt*ratio);
-	 	}     	
+	 	
+	 	if(imageWidth > windowWidth || imageHeight > windowHeight){
+	 		if(preloader.width>windowWidth){
+	 			wRatio = windowWidth / preloader.width
+	 			$image.height((imageHeight * wRatio) * size);
+	 			$image.width(windowWidth * size)
+	 		}else{
+	 			hRatio = windowHeight / preloader.height
+	 			$image.height(windowHeight * size);
+	 			$image.width((imageWidth * hRatio) * size)
+	 		}
+	 	}
 	}
+	this.sizeContainer(windowWidth); // call method sizeContainer for fill container on screen
+	preloader.src = this.album.linksList[numberImage].link; //
+	$image.fadeIn('slow'); 	
 	
-	preloader.src = this.album.linksList[numberImage].link; // 	
-	this.sizeContainer(); // call method sizeContainer for fill container on screen
 };
 
 Spotlight.prototype.end = function(){
