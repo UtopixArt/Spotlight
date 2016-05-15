@@ -26,7 +26,7 @@
 	top: 0px;
 	right: 0px;
 	width: 60%;
-	height: 100%;
+	height: 96%;
 	}
 
 #leftButton{
@@ -34,31 +34,26 @@
 	top:0px;
 	left: 0px;
 	width: 40%;
-	height: 100%;
+	height: 96%;
 	}
 
 #closeButton{
-	position: absolute;
-	bottom: 300px;
-	right: 0px;
 	height: 27px;
-	width: 100%;
+    width: 100%;
 	}
 
 #rightIcon{
 	position: absolute;
-	width: 50px;
-	height: 45px;
-	top: 50%;
-	right: 0px;
+    top: 50%;
+    right: 40px;
+    z-index: -1;
 	}
 
 #leftIcon{
 	position: absolute;
-	width: 50px;
-	height: 45px;
-	top: 50%;
-	left: 0px;
+    top: 50%;
+    left: 40px;
+    z-index: -1;
 	}
 
 #closeIcon{
