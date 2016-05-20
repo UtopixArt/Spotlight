@@ -3,6 +3,7 @@
 		//store core cache
 		this.album = {
 						linksList : [], //array of links
+						title : [],
 						numberImage : 0 // current image count
 						};
 		console.log(this.album);
@@ -24,10 +25,10 @@
 		$('body').on('click', 'a[data-spotLight]', function(event) { //event click on data-spotLight value
 	    	
     		self.buildAlbum($(event.currentTarget));
-	    
+	    	$('#overlay').fadeIn('slow');
 	    	$('#spotlight').fadeIn('slow');
 	    	self.showImage(self.album.numberImage);
-	    	
+	    	$('#show').hide();
 	    	return false;
 	    });
 	};
@@ -37,9 +38,13 @@
 		var self = this // pass through closure
 		
 		this.album.linksList = []; //reset value of the spotLight
+		this.album.titleList = [];
 		this.album.numberImage = 0;
 		// method push album in the array with object data	
 		function addToAlbum($link){
+			self.album.titleList.push({
+			title : $link.attr('title'),	
+			});
 			self.album.linksList.push({ // push in the ablum.linksList array
 	        link : $link.attr('href'),
 	    	});
@@ -65,71 +70,88 @@
 
 		Spotlight.prototype.cacheDiv = function(){
 		
-		this.leftButton = '<div id = "leftButton"></div>'
-		this.rightButton = '<div id = "rightButton"></div>'
-		this.closeButton = '<div id = "closeButton"></div>'
-		this.image = '<img id ="show">'
-
-		this.navcontainer = '<div id = "navcontainer">'+this.leftButton+this.rightButton+'</div>'
+		this.leftButton = '<div id = "leftButton"></div>';
+		this.rightButton = '<div id = "rightButton"></div>';
+		this.closeButton = '<div id = "closeButton"></div>';
+		this.number = '<p id = "number"></p>';
+		this.title = '<p id = "title"></p>';
+		this.labelData = '<div id = "labelData">'+this.title+this.number+this.closeButton+'</div>';
+		this.image = '<img id ="show">';
+		this.overlay ='<div id ="overlay"></div>';
+		this.navcontainer = '<div id = "navcontainer">'+this.leftButton+this.rightButton+'</div>';
 		
-		this.imgcontainer ='<div id = "imgcontainer">'+this.navcontainer+this.image+'</div>'
+		this.imgcontainer ='<div id = "imgcontainer">'+this.navcontainer+this.image+'</div>';
 		
-		this.container = '<div id = "container">'+this.imgcontainer+this.closeButton+'</div>'
-		this.spotlight = '<div id = "spotlight">'+this.container+'</div>'
+		this.container = '<div id = "container">'+this.imgcontainer+this.labelData+'</div>';
+		this.spotlight = this.overlay+'<div id = "spotlight">'+this.container+'</div>';
 
 		$(this.spotlight).appendTo($('body'));
-		
+		$('#overlay').hide();
 		$('#spotlight').hide();
+		$('#labelData').hide();
 	};
 
 	Spotlight.prototype.update = function(){
 				
 		this.nav(); //call nav logic
-		this.end(); //close button method "jquery"
+		this.end();
 		this.sizeContainer(); // call method sizeContainer for fill container on screen
 	};
 
 	Spotlight.prototype.nav = function(){
 		var	self = this; // pass through closure
+		var KEYCODE_ESC        = 27,
+			KEYCODE_LEFTARROW  = 37,
+			KEYCODE_RIGHTARROW = 39;
 		
+		$('body').keydown(function(event){
+		
+			var id = ($(event.currentTarget)).attr('id')
+			var keycode = event.keyCode;
+			console.log(keycode);
+			navlogic(id,keycode);	
+		});
+
 		$('body').on('click', 'div[id = rightButton],div[id = leftButton]', function(event){		
 			var id = ($(event.currentTarget)).attr('id')
 			navlogic(id);
 		});
-		
-		function navlogic(id){			
+	
+		function navlogic(id,keycode){			
 			
-			if (id == 'rightButton'){			
+			if (id == 'rightButton' || keycode === KEYCODE_RIGHTARROW){			
 				if(self.album.numberImage >= self.album.linksList.length -1){
 					self.album.numberImage = 0;
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 				}else{
 					self.album.numberImage++; 
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}		
+				}
+				return self.showImage(self.album.numberImage);		
 			}
 			
-			else if (id == 'leftButton'){							
+			else if (id == 'leftButton' || keycode === KEYCODE_LEFTARROW){							
 				if(self.album.numberImage -1 < 0){
 					self.album.numberImage = self.album.linksList.length -1;
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 				}else{
 					self.album.numberImage--; 
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}	
+				}
+				return self.showImage(self.album.numberImage);	
 			}
-			$('#show').hide();
-			$('#rightButton').hide();
-			$('#leftButton').hide();
-			$('#closeButton').hide();
-			return self.showImage(self.album.numberImage);
-		};	
+
+			if(keycode === KEYCODE_ESC){
+				$('#overlay').fadeOut('slow');
+	    		$('#spotlight').fadeOut('slow');
+			}
+		};
 	};
 
 	Spotlight.prototype.sizeContainer = function() {
-	    var $spotlight = $('#spotlight');
-	    $spotlight.width($(document).width());
-	    $spotlight.height($(document).height());    
+	    var $overlay = $('#overlay');
+	    $overlay.width($(document).width());
+	    $overlay.height($(document).height());    
 	};
 
 	Spotlight.prototype.showImage = function(numberImage) {
@@ -137,77 +159,82 @@
 	    var $image = $('#show'); //stock l'id $('#Show')
 	    var preloader = new Image();// use object image for grab image size
 		   	  
-	   	var windowWidth = $('#imgcontainer').width() , //stock window dimention
-	   		windowHeight  = $('#imgcontainer').height(),
+	   	var windowWidth = $(window).width() , //stock window dimention
+	   		windowHeight  = $(window).height(),
 	   		imageWidth,
 	   		imageHeight,
 	   		ratio,
-	   		wRatio,
-	   		hRatio,
-	   		size = 1;    
-
+	   		size = 0.9;    
+   		$('#show').hide();
+		$('#rightButton').hide();
+		$('#leftButton').hide();
+		$('#labelData').hide();	
 	    preloader.onload = function(){ //onload function
 	    	$image.attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
 			
 			//fit image on screen method
-			$image.width(preloader.width * size)
-			$image.height(preloader.height * size)
+			imageHeight = preloader.height * size
+			imageWidth = preloader.width * size
 
-			imageWidth = preloader.width
-			imageHeight = preloader.height
-		 	
-		 	
-		 	if(imageWidth > windowWidth || imageHeight > windowHeight){
-		 		if(preloader.width>windowWidth){
-		 			
-		 			if(preloader.width > windowWidth && preloader.height > windowHeight ){
-		 				ratio = windowHeight / preloader.height
-		 				$image.height(windowHeight*size);
-		 				$image.width((imageWidth*ratio)*size);
-		 				console.log("image trop haut et trop large")
-		 				
-		 				if($image.width()>windowWidth){
-		 					ratio = windowWidth / preloader.width
-		 					$image.height((imageHeight*ratio)*size);
-		 					$image.width(windowWidth*size);
-		 					console.log("image encore trop large")
-		 				}
-		 				
+					 	
+		 	if(preloader.width > windowWidth){
+	 				ratio = windowWidth / preloader.width;
+	 				imageHeight = (preloader.height * ratio) * size;
+	 				imageWidth = (windowWidth*size);
+	 		
+	 		}else{
+	 				ratio = windowHeight / preloader.height;
+	 				imageHeight = windowHeight * size;
+	 				imageWidth = (preloader.width * ratio) * size;	
+	 		}
 
-		 			}else{
-		 				wRatio = windowWidth / preloader.width
-		 				$image.height((imageHeight * wRatio) * size);
-		 				$image.width(windowWidth * size)
-		 				console.log("image trop large")
-		 			}
-
-		 		}else{
-
-		 			
-	 				hRatio = windowHeight / preloader.height
-	 				$image.height(windowHeight * size);
-	 				$image.width((imageWidth * hRatio) * size)
-	 				console.log("image trop haute")
-		 			
-		 		}
-		 	}
-		}
-		
-		preloader.src = this.album.linksList[numberImage].link; //
-		$image.fadeIn('slow','swing');
-		
-		$('#rightButton').fadeIn('slow','swing');
-		$('#leftButton').fadeIn('slow','swing');
-		$('#closeButton').fadeIn('slow','swing'); 	
-		
+	 		$image.height(imageHeight);
+	 		$image.width(imageWidth);
+	 		$('#title').text(self.album.titleList[numberImage].title);
+	 		$('#number').text("Image count : "+(numberImage+1)+" of "+self.album.linksList.length);
+	 		self.animation(imageWidth,imageHeight);
+	 	}
+		preloader.src = this.album.linksList[numberImage].link;		
 	};
 	
-	
+	Spotlight.prototype.animation = function(imageWidth, imageHeight) {
+    var self = this;
+    	
+
+    var oldWidth  = $('#container').outerWidth(),
+   		oldHeight = $('#container').outerHeight(),
+    	newWidth  = imageWidth
+    	newHeight = imageHeight
+
+    function postResize() {
+    	$('#spotlight').find('#leftButton').height(newHeight);
+    	$('#spotlight').find('#rightButton').height(newHeight);
+    	$('#show').fadeIn('slow','swing');
+    	$('#rightButton').fadeIn('slow','swing');
+		$('#leftButton').fadeIn('slow','swing');
+		$('#labelData').slideDown("slow",'swing'); 
+    }
+
+    if (oldWidth !== newWidth || oldHeight !== newHeight) {
+    	$('#container').animate({
+        	width: newWidth,
+        	height: newHeight
+      	}, 120 , 'swing', function() {
+        postResize();
+      });
+    
+    } else {
+      postResize();
+    }
+  };
+
 	Spotlight.prototype.end = function(){
 		var $spotlight = $('#spotlight')
-		
-		$('#closeButton').click(function(){	
-	    	$spotlight.fadeOut('slow');	
+			
+		$('#labelData').click(function(){	
+	    	$('#overlay').fadeOut('slow');
+	    	$spotlight.fadeOut('slow');
+
 		});
 	};
 
