@@ -1,16 +1,27 @@
 #spotlight{
-	position: absolute;
-	top: 0px;
-	left: 0px;	
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.9);
-	z-index: 9999;
+    position: absolute;
+    padding-top: 5%;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;	
 	}
 
-.container{
-	position: relative;
+#container{
+    height: 65%;
+    width: 85%;
+    margin: auto;
+	}
+
+#imgcontainer{
 	margin: auto;
-	padding-top: 30px;
+	height: 100%;
+	}
+
+#navcontainer{
+    position: absolute;
+    height: 60%;
+    width: 85%;
 	}
 
 #show{
@@ -22,42 +33,22 @@
 	}
 
 #rightButton{
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	width: 60%;
-	height: 96%;
+	display: inline-block;
+    background: url(../Spotlight/icons/next.png) right 20% no-repeat;
+    width: 60%;
+    height: 100%;
 	}
 
 #leftButton{
-	position: absolute;
-	top:0px;
-	left: 0px;
+	display: inline-block;
+	background: url(../Spotlight/icons/prev.png) left 20% no-repeat;
 	width: 40%;
-	height: 96%;
+	height: 100%;
 	}
 
 #closeButton{
+	background: url(../Spotlight/icons/close.png) top right no-repeat;
 	height: 27px;
     width: 100%;
 	}
 
-#rightIcon{
-	position: absolute;
-    top: 50%;
-    right: 40px;
-    z-index: -1;
-	}
-
-#leftIcon{
-	position: absolute;
-    top: 50%;
-    left: 40px;
-    z-index: -1;
-	}
-
-#closeIcon{
-	width: 27px;
-	height: 27px;
-	float: right;
-	}
