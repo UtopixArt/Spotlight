@@ -95,6 +95,7 @@
 				
 		this.nav(); //call nav logic
 		this.end();
+		this.responsive();
 		this.sizeContainer(); // call method sizeContainer for fill container on screen
 	};
 
@@ -127,7 +128,9 @@
 					self.album.numberImage++; 
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 				}
-				return self.showImage(self.album.numberImage);		
+				self.sizeContainer();
+				return self.showImage(self.album.numberImage);
+
 			}
 			
 			else if (id == 'leftButton' || keycode === KEYCODE_LEFTARROW){							
@@ -138,6 +141,7 @@
 					self.album.numberImage--; 
 					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
 				}
+				self.sizeContainer();
 				return self.showImage(self.album.numberImage);	
 			}
 
@@ -164,39 +168,57 @@
 	   		imageWidth,
 	   		imageHeight,
 	   		ratio,
-	   		size = 0.9;    
+	   		size = 1;
+
    		$('#show').hide();
 		$('#rightButton').hide();
 		$('#leftButton').hide();
 		$('#labelData').hide();	
+	    
 	    preloader.onload = function(){ //onload function
 	    	$image.attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
 			
 			//fit image on screen method
-			imageHeight = preloader.height * size
-			imageWidth = preloader.width * size
+			imageHeight = preloader.height
+			imageWidth = preloader.width
 
 					 	
 		 	if(preloader.width > windowWidth){
-	 				ratio = windowWidth / preloader.width;
-	 				imageHeight = (preloader.height * ratio) * size;
-	 				imageWidth = (windowWidth*size);
-	 		
-	 		}else{
+	 			
+	 			if(preloader.height > windowHeight){
 	 				ratio = windowHeight / preloader.height;
-	 				imageHeight = windowHeight * size;
-	 				imageWidth = (preloader.width * ratio) * size;	
-	 		}
+	 				imageHeight = preloader.height * ratio;
+	 				imageWidth = preloader.width * ratio;
 
-	 		$image.height(imageHeight);
-	 		$image.width(imageWidth);
+	 			}else{
+	 				ratio = windowWidth / preloader.width;
+	 				imageHeight = preloader.height * ratio;
+	 				imageWidth = windowWidth;
+	 				}
+
+	 		}else{
+ 				ratio = windowHeight / preloader.height;
+ 				imageHeight = windowHeight;
+ 				imageWidth = preloader.width * ratio;	
+	 			}
+
+	 		$image.height(imageHeight * size);
+	 		$image.width(imageWidth * size);
 	 		$('#title').text(self.album.titleList[numberImage].title);
 	 		$('#number').text("Image count : "+(numberImage+1)+" of "+self.album.linksList.length);
-	 		self.animation(imageWidth,imageHeight);
+	 		self.animation(imageWidth * size, imageHeight * size);
 	 	}
 		preloader.src = this.album.linksList[numberImage].link;		
 	};
 	
+	Spotlight.prototype.responsive = function(){
+		var self = this;
+		$( window ).resize(function(){
+			self.sizeContainer();
+		});
+	};
+
+
 	Spotlight.prototype.animation = function(imageWidth, imageHeight) {
     var self = this;
     	
@@ -205,7 +227,7 @@
    		oldHeight = $('#container').outerHeight(),
     	newWidth  = imageWidth
     	newHeight = imageHeight
-
+	
     function postResize() {
     	$('#spotlight').find('#leftButton').height(newHeight);
     	$('#spotlight').find('#rightButton').height(newHeight);

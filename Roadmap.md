@@ -6,6 +6,7 @@ Roadmap
 - animation fenetre [CHECK]
 - ajouté la prise en charge du clavier[CHECK]
 - clean code :)
+- fix overlay
 optionnel
 ------------------------------
 - minimap de la gallerie
