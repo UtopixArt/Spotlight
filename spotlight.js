@@ -6,17 +6,18 @@
 						title : [],
 						numberImage : 0 // current image count
 						};
+		
 		console.log(this.album);
 		this.init() 
-	
+		
 	};
 	
 	Spotlight.prototype.init = function() {	
 		
 		this.run();
 		this.cacheDiv();
-		this.update();			
-	
+		this.update();
+
 	};
 
 	Spotlight.prototype.run = function() {
@@ -32,7 +33,6 @@
 	    	return false;
 	    });
 	};
-
 
 	Spotlight.prototype.buildAlbum = function($link){
 		var self = this // pass through closure
@@ -92,64 +92,11 @@
 	};
 
 	Spotlight.prototype.update = function(){
-				
-		this.nav(); //call nav logic
-		this.end();
+		this.keyOn = false;		
+		this.click(); //call nav logic
+		this.keyboard();
 		this.responsive();
 		this.sizeContainer(); // call method sizeContainer for fill container on screen
-	};
-
-	Spotlight.prototype.nav = function(){
-		var	self = this; // pass through closure
-		var KEYCODE_ESC        = 27,
-			KEYCODE_LEFTARROW  = 37,
-			KEYCODE_RIGHTARROW = 39;
-		
-		$('body').keydown(function(event){
-		
-			var id = ($(event.currentTarget)).attr('id')
-			var keycode = event.keyCode;
-			console.log(keycode);
-			navlogic(id,keycode);	
-		});
-
-		$('body').on('click', 'div[id = rightButton],div[id = leftButton]', function(event){		
-			var id = ($(event.currentTarget)).attr('id')
-			navlogic(id);
-		});
-	
-		function navlogic(id,keycode){			
-			
-			if (id == 'rightButton' || keycode === KEYCODE_RIGHTARROW){			
-				if(self.album.numberImage >= self.album.linksList.length -1){
-					self.album.numberImage = 0;
-					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}else{
-					self.album.numberImage++; 
-					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}
-				self.sizeContainer();
-				return self.showImage(self.album.numberImage);
-
-			}
-			
-			else if (id == 'leftButton' || keycode === KEYCODE_LEFTARROW){							
-				if(self.album.numberImage -1 < 0){
-					self.album.numberImage = self.album.linksList.length -1;
-					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}else{
-					self.album.numberImage--; 
-					console.log("numberImage : "+self.album.numberImage+" album : "+self.album.linksList.length);
-				}
-				self.sizeContainer();
-				return self.showImage(self.album.numberImage);	
-			}
-
-			if(keycode === KEYCODE_ESC){
-				$('#overlay').fadeOut('slow');
-	    		$('#spotlight').fadeOut('slow');
-			}
-		};
 	};
 
 	Spotlight.prototype.sizeContainer = function() {
@@ -159,6 +106,7 @@
 	};
 
 	Spotlight.prototype.showImage = function(numberImage) {
+	    this.keyOn=true;
 	    var self = this;// pass through closure
 	    var $image = $('#show'); //stock l'id $('#Show')
 	    var preloader = new Image();// use object image for grab image size
@@ -174,7 +122,7 @@
 		$('#rightButton').hide();
 		$('#leftButton').hide();
 		$('#labelData').hide();	
-	    
+	   
 	    preloader.onload = function(){ //onload function
 	    	$image.attr('src',self.album.linksList[numberImage].link); // change content on $('#show'), display
 			
@@ -207,6 +155,7 @@
 	 		$('#title').text(self.album.titleList[numberImage].title);
 	 		$('#number').text("Image count : "+(numberImage+1)+" of "+self.album.linksList.length);
 	 		self.animation(imageWidth * size, imageHeight * size);
+	 		
 	 	}
 		preloader.src = this.album.linksList[numberImage].link;		
 	};
@@ -215,49 +164,112 @@
 		var self = this;
 		$( window ).resize(function(){
 			self.sizeContainer();
+
 		});
 	};
 
 
 	Spotlight.prototype.animation = function(imageWidth, imageHeight) {
-    var self = this;
-    	
+	    var self = this;
+	    	
 
-    var oldWidth  = $('#container').outerWidth(),
-   		oldHeight = $('#container').outerHeight(),
-    	newWidth  = imageWidth
-    	newHeight = imageHeight
+	    var oldWidth  = $('#container').outerWidth(),
+	   		oldHeight = $('#container').outerHeight(),
+	    	newWidth  = imageWidth
+	    	newHeight = imageHeight
 	
-    function postResize() {
-    	$('#spotlight').find('#leftButton').height(newHeight);
-    	$('#spotlight').find('#rightButton').height(newHeight);
-    	$('#show').fadeIn('slow','swing');
-    	$('#rightButton').fadeIn('slow','swing');
-		$('#leftButton').fadeIn('slow','swing');
-		$('#labelData').slideDown("slow",'swing'); 
-    }
+	    function postResize() {
+	    	$('#spotlight').find('#leftButton').height(newHeight);
+	    	$('#spotlight').find('#rightButton').height(newHeight);
+	    	$('#show').fadeIn('slow','swing');
+	    	$('#rightButton').fadeIn('slow','swing');
+			$('#leftButton').fadeIn('slow','swing');
+			$('#labelData').slideDown("slow",'swing'); 
+	    	}
 
-    if (oldWidth !== newWidth || oldHeight !== newHeight) {
-    	$('#container').animate({
-        	width: newWidth,
-        	height: newHeight
-      	}, 120 , 'swing', function() {
-        postResize();
-      });
+	    if (oldWidth !== newWidth || oldHeight !== newHeight) {
+	    	$('#container').animate({
+	        	width: newWidth,
+	        	height: newHeight
+	      	}, 120 , 'swing', function() {
+	        postResize();
+	      });
     
-    } else {
-      postResize();
-    }
-  };
+	    } else {
+	      postResize();
+	    }
+  	};
+
+  	Spotlight.prototype.navlogic = function(input){
+			var KEYCODE_ESC        = 27,
+				KEYCODE_LEFTARROW  = 37,
+				KEYCODE_RIGHTARROW = 39;
+			
+			if (input == "rightButton" || input == KEYCODE_RIGHTARROW){			
+				if(this.album.numberImage >= this.album.linksList.length -1){
+					this.album.numberImage = 0;
+					console.log("numberImage : "+this.album.numberImage+" album : "+this.album.linksList.length);
+				}else{
+					this.album.numberImage++; 
+					console.log("numberImage : "+this.album.numberImage+" album : "+this.album.linksList.length);
+				}
+				this.sizeContainer();
+				return this.showImage(this.album.numberImage);
+
+			}
+			
+			else if (input == "leftButton" || input == KEYCODE_LEFTARROW){							
+				if(this.album.numberImage -1 < 0){
+					this.album.numberImage = this.album.linksList.length -1;
+					console.log("numberImage : "+this.album.numberImage+" album : "+this.album.linksList.length);
+				}else{
+					this.album.numberImage--; 
+					console.log("numberImage : "+this.album.numberImage+" album : "+this.album.linksList.length);
+				}
+				this.sizeContainer();
+				return this.showImage(this.album.numberImage);	
+			}
+
+			if(input == "closeButton" || input == KEYCODE_ESC){
+				this.end();	
+			}
+  	}
+
+  	Spotlight.prototype.click = function() {
+  		var self = this;
+  		var next = $('#spotlight').find('#rightButton'),		
+			prev = $('#spotlight').find('#leftButton'),
+			close = $('#spotlight').find('#closeButton');	
+		
+		$('#spotlight').on('click','div[id = rightButton],div[id = leftButton],div[id = closeButton]',function(event){
+		var input = ($(event.currentTarget)).attr('id')
+		
+		self.navlogic(input);
+		});
+  	}
+
+  	Spotlight.prototype.keyboard = function(){
+  		
+  		var	self = this; // pass through closure
+		
+			$('body').keydown(function(event){
+
+				var keycode = event.keyCode;
+				if(self.keyOn){
+				console.log(keycode);
+				self.navlogic(keycode);	
+				}else{console.log("keyboard off")}
+			});
+  	}
 
 	Spotlight.prototype.end = function(){
 		var $spotlight = $('#spotlight')
-			
-		$('#labelData').click(function(){	
+			this.keyOn=false;
+			console.log(this.keyOn);
+			console.log('tiggered')
 	    	$('#overlay').fadeOut('slow');
 	    	$spotlight.fadeOut('slow');
 
-		});
 	};
 
 	return new Spotlight();
