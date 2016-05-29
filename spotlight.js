@@ -29,6 +29,7 @@
 	    	$('#overlay').fadeIn('slow');
 	    	$('#spotlight').fadeIn('slow');
 	    	self.showImage(self.album.numberImage);
+	    	self.sizeContainer();
 	    	$('#show').hide();
 	    	return false;
 	    });
@@ -102,7 +103,8 @@
 	Spotlight.prototype.sizeContainer = function() {
 	    var $overlay = $('#overlay');
 	    $overlay.width($(document).width());
-	    $overlay.height($(document).height());    
+	    $overlay.height($(document).height()); 
+
 	};
 
 	Spotlight.prototype.showImage = function(numberImage) {
@@ -116,7 +118,7 @@
 	   		imageWidth,
 	   		imageHeight,
 	   		ratio,
-	   		size = 1;
+	   		size = 0.95;
 
    		$('#show').hide();
 		$('#rightButton').hide();
@@ -137,6 +139,11 @@
 	 				ratio = windowHeight / preloader.height;
 	 				imageHeight = preloader.height * ratio;
 	 				imageWidth = preloader.width * ratio;
+	 				if(imageWidth>windowWidth){
+	 					ratio = windowWidth / imageWidth;
+	 					imageWidth = windowWidth;
+	 					imageHeight = imageHeight * ratio;
+	 					}
 
 	 			}else{
 	 				ratio = windowWidth / preloader.width;
@@ -164,7 +171,6 @@
 		var self = this;
 		$( window ).resize(function(){
 			self.sizeContainer();
-
 		});
 	};
 
