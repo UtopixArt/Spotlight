@@ -89,7 +89,7 @@
 }
 
 #closeButton{
-	background: url(../Spotlight/icons/close.png) top right no-repeat;
+	background: url(../Spotlight/icons/close.png) 50% 50% no-repeat;
     position: absolute;
     height: 27px;
     width: 27px;
