@@ -100,14 +100,14 @@
 		this.sizeContainer(); // call method sizeContainer for fill container on screen
 	};
 
-	Spotlight.prototype.sizeContainer = function() {
+	Spotlight.prototype.sizeContainer = function(){
 	    var $overlay = $('#overlay');
 	    $overlay.width($(document).width());
 	    $overlay.height($(document).height()); 
 
 	};
 
-	Spotlight.prototype.showImage = function(numberImage) {
+	Spotlight.prototype.showImage = function(numberImage){
 	    this.keyOn=true;
 	    var self = this;// pass through closure
 	    var $image = $('#show'); //stock l'id $('#Show')
@@ -159,13 +159,18 @@
 
 	 		$image.height(imageHeight * size);
 	 		$image.width(imageWidth * size);
-	 		$('#title').text(self.album.titleList[numberImage].title);
-	 		$('#number').text("Image count : "+(numberImage+1)+" of "+self.album.linksList.length);
-	 		self.animation(imageWidth * size, imageHeight * size);
 	 		
+	 		self.animation(imageWidth * size, imageHeight * size);
+	 		self.dataInfo(numberImage);	
 	 	}
 		preloader.src = this.album.linksList[numberImage].link;		
 	};
+
+	Spotlight.prototype.dataInfo =function(numberImage){
+		$('#spotlight').find(('#title')).text(this.album.titleList[numberImage].title);
+ 		$('#spotlight').find(('#number')).text("Image count : "+(numberImage+1)+" of "+this.album.linksList.length);
+	};
+
 	
 	Spotlight.prototype.responsive = function(){
 		var self = this;
@@ -175,7 +180,7 @@
 	};
 
 
-	Spotlight.prototype.animation = function(imageWidth, imageHeight) {
+	Spotlight.prototype.animation = function(imageWidth, imageHeight){
 	    var self = this;
 	    	
 
@@ -187,7 +192,7 @@
 	    function postResize() {
 	    	$('#spotlight').find('#leftButton').height(newHeight);
 	    	$('#spotlight').find('#rightButton').height(newHeight);
-	    	$('#show').fadeIn('slow','swing');
+	    	$('#show').fadeIn('fast','swing');
 	    	$('#rightButton').fadeIn('slow','swing');
 			$('#leftButton').fadeIn('slow','swing');
 			$('#labelData').slideDown("slow",'swing'); 
