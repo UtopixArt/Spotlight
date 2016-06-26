@@ -1,14 +1,18 @@
+
+body.noscroll{
+  overflow: hidden;
+	}
+
 #overlay{
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	background-color: rgba(0, 0, 0, 0.9);
-    z-index: 9999;	
+    z-index: 9999;
 	}
 
 #spotlight{
     position: absolute;
-    padding-top: 4%;
     width: 100%;
     top: 0px;
     left: 0px;
@@ -16,9 +20,9 @@
 	}
 
 #container{
-    position: relative;
-    background-color: rgba(255, 255, 255 , 1);
-    margin: auto;
+	position: relative;
+	background-color: rgba(255, 255, 255 , 1);
+	margin: auto;
 	padding: 10px;
 	}
 
@@ -71,7 +75,7 @@
     background-color: rgb(255, 255, 255);
 }
 #labelData #title{
-	
+
     font-family: Verdana;
     font-size: 0.6em;
     font-weight: bold;
@@ -79,7 +83,7 @@
 }
 
 #labelData #number{
-	
+
     font-family: Verdana;
     font-size: 0.5em;
     margin-left: 9px;
