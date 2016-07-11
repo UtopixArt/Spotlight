@@ -131,7 +131,7 @@
 	   		imageWidth,
 	   		imageHeight,
 	   		ratio,
-	   		size = 0.95;
+	   		size = 0.8;
 
    	$('#show').hide();
 		$('#rightButton').hide();
@@ -164,7 +164,7 @@
 	 				imageWidth = windowWidth;
 	 				}
 
-	 		}else{
+	 		}else if(preloader.height > windowHeight){
  				ratio = windowHeight / preloader.height;
  				imageHeight = windowHeight;
  				imageWidth = preloader.width * ratio;
